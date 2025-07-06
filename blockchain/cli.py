@@ -18,6 +18,7 @@ option_map = {
     'g': 'debug'
 }
 
+
 def parse_args(argv):
     args = {}
     i = 0
@@ -31,6 +32,39 @@ def parse_args(argv):
                 print(f"Unknown option: {arg}")
                 i += 1
                 continue
+        else:
+            i += 1
+            continue
 
+        if (i + 1) < len(argv) and not argv[i + 1].startswith('-'):
+            value = argv[i + 1]
+            i += 1
+        else:
+            value = "True"
+            
+        args[key] = value
+        i += 1
+    return args
+
+
+def build_config(args):
+    config_kwargs = {}
+    for field in Config.__dataclass_fields__:
+        value = args.get(field, getattr(Config, field))
+        field_type = Config.__dataclass_fields__[field].type
+        if field_type == int:
+            value = int(value)
+        elif field_type == bool:
+            value = str(value).lower() in ['true', '1', 'yes']
+        config_kwargs[field] = value
+    return Config(**config_kwargs)
+
+
+def main():
     argv = sys.argv[1:]
-    parse_args(argv)
+    args = parse_args(argv)
+    config = build_config(args)
+    print(config)
+
+if __name__ == "__main__":
+    main() 

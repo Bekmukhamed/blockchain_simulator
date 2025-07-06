@@ -45,6 +45,7 @@ class Config:
             raise ValueError("Print blocks must be a boolean value.")
         if self.debug not in [True, False]:
             raise ValueError("Debug mode must be a boolean value.")
+        
     def __str__(self):
         return (f"Config (nodes={self.nodes}, neighbors={self.neighbors}, miners={self.miners}, hashrate={self.hashrate}, "
                 f"blocktime={self.blocktime}, difficulty={self.difficulty}, reward={self.reward}, "
