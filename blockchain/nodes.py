@@ -1,7 +1,6 @@
 from dataclasses import dataclass
     
-
 @dataclass
-class Nodes:
-    block_id: set
-    
+class Node:
+    blocks_id: set
+    neighbors: set     
