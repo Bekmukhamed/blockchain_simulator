@@ -5,12 +5,12 @@ This is the main entry point for the blockchain simulator.
 """
 
 import sys
-from blockchain.cli import parse_args, build_config
+from blockchain import cli
 
 def main():
     argv = sys.argv[1:]
-    args = parse_args(argv)
-    config = build_config(args)
+    args = cli.parse_args(argv)
+    config = cli.build_config(args)
     print(config)
 
 

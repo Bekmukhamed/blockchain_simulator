@@ -58,13 +58,3 @@ def build_config(args):
             value = str(value).lower() in ['true', '1', 'yes']
         config_kwargs[field] = value
     return Config(**config_kwargs)
-
-
-def main():
-    argv = sys.argv[1:]
-    args = parse_args(argv)
-    config = build_config(args)
-    print(config)
-
-if __name__ == "__main__":
-    main() 
