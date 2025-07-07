@@ -1,5 +1,5 @@
 import sys
-from config import Config
+from blockchain import config
 
 option_map = {
     'n': 'nodes',
@@ -49,12 +49,19 @@ def parse_args(argv):
 
 def build_config(args):
     config_kwargs = {}
-    for field in Config.__dataclass_fields__:
-        value = args.get(field, getattr(Config, field))
-        field_type = Config.__dataclass_fields__[field].type
+    for field in config.Config.__dataclass_fields__:
+        value = args.get(field, getattr(config.Config, field))
+        field_type = config.Config.__dataclass_fields__[field].type
         if field_type == int:
             value = int(value)
         elif field_type == bool:
             value = str(value).lower() in ['true', '1', 'yes']
         config_kwargs[field] = value
-    return Config(**config_kwargs)
+    return config.Config(**config_kwargs)
+
+
+def get_config_from_cli():
+    argv = sys.argv[1:]
+    args = parse_args(argv)
+    config = build_config(args)
+    return config
