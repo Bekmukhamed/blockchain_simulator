@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-    
 
 @dataclass
 class Config:
@@ -52,3 +51,6 @@ class Config:
                 f"wallets={self.wallets}, transactions={self.transactions}, interval={self.interval}, "
                 f"blocksize={self.blocksize}, blocks={self.blocks}, print={self.print}, "
                 f"debug={self.debug})")
+    
+    # def init_parameters(): 
+
