@@ -20,6 +20,8 @@ class Config:
     def __post_init__(self):
         if self.nodes < self.miners:
             raise ValueError("Number of miners cannot exceed number of nodes.")
+        if self.neighbors >= self.nodes or self.neighbors*self.nodes%2 != 0:
+            raise ValueError("Number of neighbors is wrong.")
         if self.neighbors < 0:
             raise ValueError("Number of neighbors cannot be negative.")
         if self.hashrate <= 0:

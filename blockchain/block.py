@@ -1,8 +1,8 @@
-import dataclasses
+from dataclasses import dataclass
 
 # Block structure: Each block has a header (1,024 bytes) + (# transactions × 256
 # bytes). Track block ID, timestamp, time-since-last-block, transaction count, and size.
-@dataclasses
+@dataclass
 class Header:
     block_id: int
     timestamp: int
@@ -10,7 +10,7 @@ class Header:
     transaction_count: int
 
 
-@dataclasses
+@dataclass
 class Block: 
     header: Header          # should be 1 mb
     transactions: list      # each transaction should be 256 bytes
