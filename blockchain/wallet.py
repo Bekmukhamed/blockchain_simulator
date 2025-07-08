@@ -1,6 +1,6 @@
-import dataclasses
+from dataclasses import dataclass
 
-@dataclasses
+@dataclass
 class Wallet: 
     def send_transaction(): 
         ...

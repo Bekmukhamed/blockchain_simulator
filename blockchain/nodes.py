@@ -6,6 +6,9 @@ class Node:
     blocks_id: set
     neighbors: set
 
+    def add_neighbor(self, neighbor_id):
+        self.neighbors.add(neighbor_id)
+        print(f"Node {self.node_id} added neighbor {neighbor_id}.")
 
     def receive_block(node, block):
         node.blocks_id.add(block.block_id)

@@ -29,8 +29,17 @@ def main():
     # print(f"Created {len(nodes_list)} nodes. Nodes : {nodes_list} \n")
 
     # randomly connect each node to --neighbors M distinct peers
-    for node in nodes_list:
-        continue
+    if config.nodes * config.neighbors % 2 != 0:
+        print("Error: The product of nodes and neighbors must be even.")
+        sys.exit(1)
+
+    # m*n must be even and m < n 
+    # stubs = []
+    # for node in nodes_list:
+    #     for _ in range(config.neighbors):
+    #         stubs.append(node.node_id)
+    # while len(stubs) > 0: 
+        
 
     # create transactions
     transactions = []
