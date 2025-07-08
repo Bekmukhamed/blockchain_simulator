@@ -7,6 +7,7 @@ class Transaction:
     receiver: str
     amount: float
     timestamp: int
+    fee: int
 
     def __post_init__(self):
         if self.amount <= 0:
