@@ -5,6 +5,7 @@ from dataclasses import dataclass
 @dataclass
 class Header:
     block_id: int
+    parent_block_id: int
     timestamp: int
     time_since_last_block: int
     transaction_count: int
