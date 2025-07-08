@@ -11,8 +11,7 @@ from blockchain.nodes import Node
 from blockchain.block import Block, Header
 from blockchain.miner import Miner
 from blockchain.transaction import Transaction
-
-# from blockchain import config
+from blockchain.wallet import Wallet
 
 def main():
     # parse the arguments
@@ -28,7 +27,6 @@ def main():
         node = Node(node_id=id, blocks_id=set(), neighbors=set())
         nodes_list.append(node)
     # print(f"Created {len(nodes_list)} nodes. Nodes : {nodes_list} \n")
-
 
     # randomly connect each node to --neighbors M distinct peers
     for node in nodes_list:
@@ -56,6 +54,11 @@ def main():
     # issue R coins per block 
 
     # generate W wallets 
+    wallet_list = []
+    for id in range(config.wallets):
+        wallet = Wallet()
+        wallet_list.append(wallet)
+
 
 if __name__ == "__main__":
     main()
