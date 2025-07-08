@@ -5,6 +5,7 @@ This is the main entry point for the blockchain simulator.
 """
 
 import sys
+import time
 from random import random
 from blockchain import cli
 from blockchain.nodes import Node
@@ -13,8 +14,33 @@ from blockchain.miner import Miner
 from blockchain.transaction import Transaction
 from blockchain.wallet import Wallet
 from blockchain.network import stub_pairing
+from dataclasses import dataclass
+
+class Simulation: 
+    def __init__(self, config):
+        self.config = config
+        self.nodes = []
+        self.wallets = []
+        # This is the global unconfirmed transaction pool (mempool)
+        self.transaction_pool = []
+        # self.blockchain = []  # A simple list representing the canonical chain
+        self.start_time = 0
+        self.io_requests = 0 # global variable incremented when a node stores a new block and broadcasts it to neighbors. NOTE: ignore duplicates
+        self.network_data = 0 # stores all broadcasted block sizes. NOTE: ignore duplicates 
+
+    def setup(self):
+        print("--- Setting up the simulation ---")
+
+        # Create nodes
+        for id in range(self.config.nodes):
+            node = Node(node_id=id, blocks_id=set(), neighbors=set())
+            self.nodes.append(node)
+        print(f"Created {len(self.nodes)} nodes.")
+
 
 def main():
+    # FIXME: move time measurement to a starting point (or somewhere else)
+    start_time = time.perf_counter()
     # parse the arguments
     argv = sys.argv[1:]
     args = cli.parse_args(argv)
@@ -24,9 +50,7 @@ def main():
 
     # create N peer nodes 
     nodes_list = []
-    for id in range(config.nodes):
-        node = Node(node_id=id, blocks_id=set(), neighbors=set())
-        nodes_list.append(node)
+    
     # print(f"Created {len(nodes_list)} nodes. Nodes : {nodes_list} \n")
 
 
@@ -65,6 +89,14 @@ def main():
         wallet = Wallet()
         wallet_list.append(wallet)
 
+    # each wallet will send X transactions into the global unconfirmed pool at interval I seconds
+    
+    end_time = time.perf_counter()
+    elapsed_time = end_time - start_time
+
+    #print(f"[{elapsed_time:.2f}] Sum B:{blocks}/{totalBlocks} {complete}% abt:{avg_block_time} tps:{confirmed_tx_per_sec} infl:{inflation}% ETA:{seconds}s Diff:{xx}M H:{xx}M Tx:{total_tx} C:{coins}K Pool:{pending_tx} NMB:{network_MB} IO:{io_requests}")
+
+    #print(f"[******] End B:blocks abt:avg_block_time(s) tps:confirmed_tx_per_sec Tx:total_tx C:coins NMB:network_MB IO:io_requests")
 
 if __name__ == "__main__":
     main()
