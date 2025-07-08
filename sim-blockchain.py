@@ -43,10 +43,14 @@ def main():
         transactions.append(transaction)
     # print(f"Transactions: {transactions} \n")
 
-    # create block
-    header = Header(block_id=0, timestamp=0, time_since_last_block=0, transaction_count=len(transactions))
-    block = Block(header=header, transactions=transactions)
+    # create blocks
+    for id in range(config.blocks):
+        header = Header(block_id=id, parent_block_id=id-1 if id > 0 else 0, timestamp=0, time_since_last_block=0, transaction_count=len(transactions))
+        block = Block(header=header, transactions=transactions)
+        # print(f"Block {id} created: {block} \n")
     
+    
+
     # miner
     miner = Miner(miner_id=0, hashrate=config.hashrate, blocktime=config.blocktime, difficulty=config.difficulty, reward=config.reward)
     # print(f"Miner created: {miner} \n")
