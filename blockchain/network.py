@@ -7,7 +7,7 @@ def stub_pairing(nodes_list, neighbors):
             stubs.append(node.node_id)
 
     random.shuffle(stubs)
-    
+    # print("-----if")
     while len(stubs) >= 2:
         stub1 = stubs.pop()
         stub2 = stubs.pop()
@@ -16,8 +16,7 @@ def stub_pairing(nodes_list, neighbors):
             random.shuffle(stubs)
             continue
 
-
         nodes_list[stub1].neighbors.add(stub2)
         nodes_list[stub2].neighbors.add(stub1)
+    # print("0000--exit while")
 
-                

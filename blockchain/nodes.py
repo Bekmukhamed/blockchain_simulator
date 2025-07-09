@@ -6,10 +6,14 @@ class Node:
     blocks_id: set
     neighbors: set
 
-    def add_neighbor(self, neighbor_id):
-        self.neighbors.add(neighbor_id)
-        print(f"Node {self.node_id} added neighbor {neighbor_id}.")
+    # def add_neighbor(self, neighbor_id):
+    #     self.neighbors.add(neighbor_id)
 
-    def receive_block(node, block):
-        node.blocks_id.add(block.block_id)
-        print(f"Node {node.node_id} received block {block.block_id}.")
+    def receive_block(self, block, nodes_list):
+        if block.header.block_id in self.blocks_id:
+            return
+        self.blocks_id.add(block.header.block_id)
+        print(f"Node {self.node_id} received block {block.header.block_id}")
+        for neighbor_id in self.neighbors:
+            nodes_list[neighbor_id].receive_block(block, nodes_list)
+        

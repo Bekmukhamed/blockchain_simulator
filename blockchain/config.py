@@ -7,7 +7,7 @@ class Config:
     miners: int = 2
     hashrate: int = 1000
     blocktime: int = 10
-    difficulty: int = 1
+    difficulty: int = 0 # initialized to T x (K x H) in cli.py
     reward: int = 50
     wallets: int = 5
     transactions: int = 100
@@ -28,7 +28,7 @@ class Config:
             raise ValueError("Hashrate must be a positive integer.")
         if self.blocktime <= 0:
             raise ValueError("Block time must be a positive integer.")
-        if self.difficulty <= 0:
+        if self.difficulty < 0:
             raise ValueError("Difficulty must be a positive integer.")
         if self.reward <= 0:
             raise ValueError("Reward must be a positive integer.")

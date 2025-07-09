@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from uuid import uuid4
     
 @dataclass
 class Transaction:
@@ -9,8 +10,8 @@ class Transaction:
     timestamp: int
     fee: int
 
-    def __post_init__(self):
-        if self.amount <= 0:
+    @staticmethod
+    def create_transaction(sender, receiver, amount, timestamp, fee):
+        if amount <= 0:
             raise ValueError("Amount must be greater than zero")
-        
-    
+        return Transaction(transaction_id=uuid4().hex, sender=sender, receiver=receiver, amount=amount, timestamp=timestamp, fee=fee)

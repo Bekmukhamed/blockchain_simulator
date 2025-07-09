@@ -57,6 +57,9 @@ def build_config(args):
         elif field_type == bool:
             value = str(value).lower() in ['true', '1', 'yes']
         config_kwargs[field] = value
+
+    if 'difficulty' not in args or args['difficulty'] == 0:
+        config_kwargs['difficulty'] = int(config_kwargs['blocktime']) * (int(config_kwargs['miners']) * int(config_kwargs['hashrate']))
     return config.Config(**config_kwargs)
 
 
