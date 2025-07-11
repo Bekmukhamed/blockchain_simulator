@@ -54,12 +54,14 @@ def build_config(args):
         field_type = config.Config.__dataclass_fields__[field].type
         if field_type == int:
             value = int(value)
-        elif field_type == bool:
-            value = str(value).lower() in ['true', '1', 'yes']
+        elif field_type == bool and isinstance(value, str):
+            value = value.lower() in ['true', '1', 'yes']
         config_kwargs[field] = value
 
+    # Initialize difficulty if not provided
     if 'difficulty' not in args or args['difficulty'] == 0:
         config_kwargs['difficulty'] = int(config_kwargs['blocktime']) * (int(config_kwargs['miners']) * int(config_kwargs['hashrate']))
+    
     return config.Config(**config_kwargs)
 
 

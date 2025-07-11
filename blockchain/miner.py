@@ -20,5 +20,5 @@ class Miner:
             transaction_count=len(transactions)
         )
         block = Block(header=header, transactions=transactions)
-        print(f"Miner {self.miner_id} mined block {block_id} with {len(transactions)} transactions.")
+        # print(f"Miner {self.miner_id} mined block {block_id} with {len(transactions)} transactions.")
         return block, [transaction.transaction_id for transaction in transactions]

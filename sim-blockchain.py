@@ -36,19 +36,23 @@ class Simulation:
         self.block_times = []
         self.total_transactions = 0
 
+        # Calculate blocks per year based on block time
+        # blocks_per_day = int(86400 / self.config.blocktime)  # 86400 seconds in a day
+        blocks_per_day = 50
+        self.config.blocks = blocks_per_day  # 1 year simulation
+
     def setup(self):
-        print("--- Setting up the simulation ---")
+        # print("--- Setting up the simulation ---")
         # Wallets → TransactionPool → Miner selects → Block → Node broadcasts → Neighbors receive → Pool pruning
         
         # Create nodes
         for id in range(self.config.nodes):
             node = Node(node_id=id, blocks_id=set(), neighbors=set())
             self.nodes.append(node)
-        print(f"Created {len(self.nodes)} nodes.")
-        
+        # print(f"Created {len(self.nodes)} nodes.")
         # Connect nodes
         stub_pairing(self.nodes, self.config.neighbors)
-        print(f"Neighbors after pairing: {[node.neighbors for node in self.nodes]} \n")
+        # print(f"Neighbors after pairing: {[node.neighbors for node in self.nodes]} \n")
 
         # Generate wallets
         for id in range(self.config.wallets):
@@ -96,29 +100,62 @@ class Simulation:
     def miner_process(self, miner):
         block_id = 1
         parent_block_id = 0
+        last_block_time = self.env.now
+        blocks_since_retarget = 0
+        blocks_since_halving = 0
+        current_reward = miner.reward
+        
         while len(self.blocks) < self.config.blocks:
             total_hashrate = self.config.miners * self.config.hashrate
             mining_time = expovariate(total_hashrate / self.config.difficulty)
             yield self.env.timeout(mining_time)
+            
+            if len(self.blocks) >= self.config.blocks:
+                break
+                
+            current_time = self.env.now
+            time_since_last = current_time - last_block_time
+            
             block, included_tx_ids = miner.mine_block(
                 parent_block_id=parent_block_id,
                 pool=self.transaction_pool,
                 block_id=block_id,
-                timestamp=int(self.env.now),
+                timestamp=int(current_time),
                 blocksize=self.config.blocksize
             )
+            
+            block.header.time_since_last_block = time_since_last
+            
             self.blocks.append(block)
             self.coin_supply += miner.reward
-            self.last_block_time = self.env.now
-            self.block_times.append(block.header.time_since_last_block)
+            self.block_times.append(time_since_last)
+            last_block_time = current_time
+            
             parent_block_id = block_id
             block_id += 1
+            
             self.env.process(self.propagate_block(block, 0))
             self.transaction_pool.remove_confirmed_transaction(set(included_tx_ids))
-            if self.config.print and len(self.blocks) % self.config.print == 0:
+            
+            blocks_since_retarget += 1
+            blocks_since_halving += 1
+
+            # Difficulty retargeting every 2016 blocks
+            if blocks_since_retarget >= 2016:
+                actual_time = sum(self.block_times[-2016:])
+                target_time = self.config.blocktime * 2016
+                self.config.difficulty = int(self.config.difficulty * (target_time / actual_time))
+                blocks_since_retarget = 0
+
+            # Reward halving
+            if hasattr(self.config, 'halving') and self.config.halving:
+                if blocks_since_halving >= self.config.halving:
+                    current_reward = max(current_reward // 2, 0)
+                    blocks_since_halving = 0
+            
+            # Print progress based on interval or debug mode
+            if self.config.debug or (len(self.blocks) % self.config.print == 0):
                 self.print_summary()
-            if len(self.blocks) >= self.config.blocks:
-                break
 
 
     # def miner_mine_blocks(self):
@@ -186,13 +223,51 @@ class Simulation:
             yield self.env.timeout(0)
 
     def print_summary(self):
+
         blocks = len(self.blocks)
         total_blocks = self.config.blocks
-        complete = 100 * blocks / total_blocks
-        abt = sum(self.block_times) / len(self.block_times) if self.block_times else 0
-        tps = (blocks * self.config.blocksize) / self.env.now if self.env.now else 0
-        coins = self.coin_supply
-        print(f"[{self.env.now:.2f}] Sum B:{blocks}/{total_blocks} {complete:.1f}% abt:{abt:.2f}s tps:{tps:.2f} C:{coins} Pool:{len(self.transaction_pool.transactions)} NMB:{self.network_data/1e6:.2f} IO:{self.io_requests}")
+        complete = min(100 * blocks / total_blocks, 100.0)  # Cap at 100%
+        
+        # Calculate average block time
+        if len(self.block_times) > 1:
+            abt = sum(self.block_times[1:]) / (len(self.block_times) - 1)  # Skip first block
+        else:
+            abt = 0
+        
+        # Calculate transactions per second
+        tps = self.total_transactions / self.env.now if self.env.now > 0 else 0
+        
+        # Calculate ETA
+        remaining_blocks = max(total_blocks - blocks, 0)
+        eta = remaining_blocks * abt if abt > 0 else 0
+        
+        # Calculate inflation rate
+        prev_supply = self.coin_supply - self.miners[0].reward if blocks > 1 else self.miners[0].reward
+        inflation = ((self.coin_supply - prev_supply) / prev_supply * 100) if prev_supply > 0 else 0
+        
+        # Format values with appropriate units
+        diff_str = f"{self.config.difficulty/1e6:.1f}M"
+        hash_str = f"{self.config.hashrate/1e3:.1f}K"  # Changed to K since hashrate is 1000
+        coins_str = f"{self.coin_supply/1e3:.1f}K"
+        nmb_str = f"{self.network_data/1e6:.2f}"
+        
+        # Use consistent format with sample output
+        print(
+            f"[{self.env.now:.2f}] "
+            f"Sum B:{blocks}/{total_blocks} "
+            f"{complete:.1f}% "
+            f"abt:{abt:.2f}s "
+            f"tps:{tps:.2f} "
+            f"infl:{inflation:.2f}% "
+            f"ETA:{eta:.2f}s "
+            f"Diff:{diff_str} "
+            f"H:{hash_str} "
+            f"Tx:{self.total_transactions} "
+            f"C:{coins_str} "
+            f"Pool:{len(self.transaction_pool.transactions)} "
+            f"NMB:{nmb_str} "
+            f"IO:{self.io_requests}"
+        )
 
     def run(self):
         self.setup()
@@ -202,7 +277,7 @@ class Simulation:
             self.env.process(self.miner_process(miner))
         self.env.run(until=None)
         self.print_summary()
-        print("Simulation run complete.")
+        # print("Simulation run complete.")
 
 # def main():
 #     argv = sys.argv[1:]
@@ -223,7 +298,7 @@ class Simulation:
 
 def main():
     config = cli.get_config_from_cli()
-    print(config)
+    # print(config)
     sim = Simulation(config)
     sim.run()
 if __name__ == "__main__":
