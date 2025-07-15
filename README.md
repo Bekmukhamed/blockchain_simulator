@@ -1,4 +1,4 @@
-Command line Options:
+Command line Options:<br> 
 --nodes, -n          Number of network nodes (default: 10)  
 --neighbors, -m      Connections per node (default: 5)    
 --miners, -k         Number of miners (default: 2)  
