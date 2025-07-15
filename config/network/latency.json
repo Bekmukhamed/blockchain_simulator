@@ -1,0 +1,116 @@
+
+{
+  "description": "Geographic latency matrix based on real network measurements",
+  "locations": {
+    "North_America_East": {
+      "North_America_East": {
+        "distribution": "invgamma",
+        "parameters": "(5.540906482531864, 0.33330564880631053, 0.9872493535175394)",
+        "min_ms": 1,
+        "max_ms": 10
+      },
+      "North_America_West": {
+        "distribution": "norm",
+        "parameters": "(45.5, 8.2)",
+        "min_ms": 25,
+        "max_ms": 80
+      },
+      "Europe": {
+        "distribution": "norm",
+        "parameters": "(73.6995, 0.19583092197097127)",
+        "min_ms": 60,
+        "max_ms": 120
+      },
+      "Asia_Pacific": {
+        "distribution": "norm",
+        "parameters": "(156.00904977375566, 0.09469886668079797)",
+        "min_ms": 120,
+        "max_ms": 220
+      },
+      "South_America": {
+        "distribution": "norm",
+        "parameters": "(85.4, 12.3)",
+        "min_ms": 50,
+        "max_ms": 150
+      }
+    },
+    "Europe": {
+      "North_America_East": {
+        "distribution": "norm",
+        "parameters": "(73.6995, 0.19583092197097127)",
+        "min_ms": 60,
+        "max_ms": 120
+      },
+      "Europe": {
+        "distribution": "invgamma",
+        "parameters": "(6.4360455224301525, 0.8312748033308526, 1.086191852963273)",
+        "min_ms": 1,
+        "max_ms": 15
+      },
+      "Asia_Pacific": {
+        "distribution": "norm",
+        "parameters": "(131.0275, 0.25834811785650774)",
+        "min_ms": 100,
+        "max_ms": 180
+      },
+      "South_America": {
+        "distribution": "norm",
+        "parameters": "(145.2, 18.7)",
+        "min_ms": 120,
+        "max_ms": 200
+      }
+    },
+    "Asia_Pacific": {
+      "Europe": {
+        "distribution": "norm",
+        "parameters": "(131.0275, 0.25834811785650774)",
+        "min_ms": 100,
+        "max_ms": 180
+      },
+      "Asia_Pacific": {
+        "distribution": "invgamma",
+        "parameters": "(11.104508341331055, 0.3371934865734555, 2.0258998705983737)",
+        "min_ms": 1,
+        "max_ms": 12
+      },
+      "North_America_East": {
+        "distribution": "norm",
+        "parameters": "(156.00904977375566, 0.09469886668079797)",
+        "min_ms": 120,
+        "max_ms": 220
+      }
+    }
+  },
+  "bandwidth_profiles": {
+    "datacenter": {
+      "bandwidth_mbps": 10000,
+      "packet_loss": 0.0001,
+      "jitter_factor": 0.01
+    },
+    "enterprise": {
+      "bandwidth_mbps": 1000,
+      "packet_loss": 0.001,
+      "jitter_factor": 0.02
+    },
+    "residential_fiber": {
+      "bandwidth_mbps": 500,
+      "packet_loss": 0.005,
+      "jitter_factor": 0.05
+    },
+    "residential_cable": {
+      "bandwidth_mbps": 100,
+      "packet_loss": 0.01,
+      "jitter_factor": 0.1
+    },
+    "mobile_4g": {
+      "bandwidth_mbps": 50,
+      "packet_loss": 0.05,
+      "jitter_factor": 0.2
+    },
+    "satellite": {
+      "bandwidth_mbps": 25,
+      "packet_loss": 0.1,
+      "jitter_factor": 0.3
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "MEMO",
+  "symbol": "MEMO",
+  "consensus": {
+    "algorithm": "proof_of_work",
+    "difficulty_adjustment_blocks": 2016,
+    "difficulty_adjustment_time": 6590.32
+  },
+  "mining": {
+    "initial_reward": 51.8457072,
+    "halving_interval": 9644000,
+    "target_block_time": 3.27,
+    "max_halvings": 33
+  },
+  "blocks": {
+    "max_size_bytes": 8000000,
+    "max_transactions": 32000,
+    "header_size_bytes": 1024,
+    "transaction_size_bytes": 256
+  },
+  "network": {
+    "default_nodes": 100,
+    "default_connections": 8
+  },
+  "economics": {
+    "max_supply": null
+  }
+}

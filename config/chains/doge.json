@@ -1,0 +1,29 @@
+
+{
+  "name": "Dogecoin",
+  "symbol": "DOGE",
+  "consensus": {
+    "algorithm": "proof_of_work",
+    "difficulty_adjustment_blocks": 1,
+    "difficulty_adjustment_time": 60
+  },
+  "mining": {
+    "initial_reward": 10000,
+    "halving_interval": null,
+    "target_block_time": 60,
+    "max_halvings": 0
+  },
+  "blocks": {
+    "max_size_bytes": 1000000,
+    "max_transactions": 4000,
+    "header_size_bytes": 1024,
+    "transaction_size_bytes": 256
+  },
+  "network": {
+    "default_nodes": 100,
+    "default_connections": 8
+  },
+  "economics": {
+    "max_supply": null
+  }
+}

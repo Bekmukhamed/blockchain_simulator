@@ -1,0 +1,76 @@
+{
+  "description": "Blockchain-specific processing delays based on empirical measurements",
+  "bitcoin": {
+    "transaction_validation": {
+      "distribution": "lognorm",
+      "parameters": "(0.00049512563, 0.004892564, 0.0000425785)",
+      "description": "Time to validate a single transaction in seconds"
+    },
+    "block_validation": {
+      "distribution": "lognorm",
+      "parameters": "(0.11269612563, 0.23958425545, 0.00264255485)",
+      "description": "Time to validate a complete block in seconds"
+    },
+    "block_propagation_base": {
+      "distribution": "norm",
+      "parameters": "(0.05, 0.01)",
+      "description": "Base time to prepare block for propagation"
+    },
+    "mempool_processing": {
+      "distribution": "exponential",
+      "parameters": "(0.001)",
+      "description": "Time to process transaction into mempool"
+    }
+  },
+  "bitcoin_cash": {
+    "transaction_validation": {
+      "distribution": "lognorm",
+      "parameters": "(0.00045312563, 0.004592564, 0.0000325785)",
+      "description": "Slightly faster due to simpler validation"
+    },
+    "block_validation": {
+      "distribution": "lognorm",
+      "parameters": "(0.15269612563, 0.31958425545, 0.00364255485)",
+      "description": "Slower due to larger blocks"
+    },
+    "block_propagation_base": {
+      "distribution": "norm",
+      "parameters": "(0.08, 0.02)",
+      "description": "Longer due to larger block sizes"
+    }
+  },
+  "litecoin": {
+    "transaction_validation": {
+      "distribution": "lognorm",
+      "parameters": "(0.00039512563, 0.003892564, 0.0000225785)",
+      "description": "Faster validation due to simpler scripting"
+    },
+    "block_validation": {
+      "distribution": "lognorm",
+      "parameters": "(0.08269612563, 0.18958425545, 0.00184255485)",
+      "description": "Faster block validation"
+    },
+    "block_propagation_base": {
+      "distribution": "norm",
+      "parameters": "(0.03, 0.008)",
+      "description": "Faster propagation due to smaller blocks"
+    }
+  },
+  "dogecoin": {
+    "transaction_validation": {
+      "distribution": "lognorm",
+      "parameters": "(0.00035512563, 0.003592564, 0.0000195785)",
+      "description": "Similar to Litecoin"
+    },
+    "block_validation": {
+      "distribution": "lognorm",
+      "parameters": "(0.06269612563, 0.16958425545, 0.00154255485)",
+      "description": "Fast validation due to 1-minute blocks"
+    },
+    "block_propagation_base": {
+      "distribution": "norm",
+      "parameters": "(0.025, 0.006)",
+      "description": "Very fast propagation"
+    }
+  }
+}

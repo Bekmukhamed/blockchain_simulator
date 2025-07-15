@@ -1,0 +1,35 @@
+{
+  "simulation": {
+    "default_nodes": 10,
+    "default_neighbors": 5,
+    "default_miners": 2,
+    "default_hashrate": 1000000,
+    "default_blocktime": 10,
+    "default_difficulty": 0,
+    "default_reward": 50,
+    "default_wallets": 5,
+    "default_transactions": 100,
+    "default_interval": 1,
+    "default_blocksize": 1000,
+    "default_blocks": 10,
+    "default_print": 144,
+    "default_print_interval": 144,
+    "default_debug": false,
+    "default_halving": 210000
+  },
+  "validation": {
+    "max_miners_per_node_ratio": 1.0,
+    "min_neighbors": 0,
+    "max_neighbors_ratio": 0.9,
+    "min_hashrate": 1,
+    "min_blocktime": 1,
+    "min_difficulty": 0,
+    "min_reward": 1,
+    "min_wallets": 1,
+    "min_transactions": 0,
+    "min_interval": 0.001,
+    "min_blocksize": 1,
+    "min_blocks": 1,
+    "min_print_interval": 1
+  }
+}

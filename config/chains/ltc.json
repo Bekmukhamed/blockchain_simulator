@@ -1,0 +1,29 @@
+
+{
+  "name": "Litecoin",
+  "symbol": "LTC",
+  "consensus": {
+    "algorithm": "proof_of_work",
+    "difficulty_adjustment_blocks": 2016,
+    "difficulty_adjustment_time": 302400
+  },
+  "mining": {
+    "initial_reward": 50,
+    "halving_interval": 840000,
+    "target_block_time": 150,
+    "max_halvings": 33
+  },
+  "blocks": {
+    "max_size_bytes": 1000000,
+    "max_transactions": 4000,
+    "header_size_bytes": 1024,
+    "transaction_size_bytes": 256
+  },
+  "network": {
+    "default_nodes": 100,
+    "default_connections": 8
+  },
+  "economics": {
+    "max_supply": 84000000
+  }
+}

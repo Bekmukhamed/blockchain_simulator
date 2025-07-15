@@ -1,0 +1,45 @@
+{
+  "name": "Network Stress Test",
+  "description": "High transaction load with realistic network conditions",
+  "chain": "bitcoin",
+  "duration_years": 0.1,
+  "network_topology": "global_distributed",
+  "workload": {
+    "wallets": 10000,
+    "transactions_per_wallet": 100,
+    "transaction_interval": 0.01,
+    "transaction_size_distribution": {
+      "small": {"probability": 0.7, "size_bytes": 250},
+      "medium": {"probability": 0.25, "size_bytes": 500}, 
+      "large": {"probability": 0.05, "size_bytes": 1000}
+    }
+  },
+  "mining": {
+    "miners": 100,
+    "hashrate_per_miner": 1000000,
+    "geographic_distribution": {
+      "Asia_Pacific": 0.65,
+      "North_America_East": 0.20,
+      "Europe": 0.15
+    }
+  },
+  "network_conditions": {
+    "latency_multiplier": 1.5,
+    "packet_loss_multiplier": 2.0,
+    "bandwidth_multiplier": 0.7
+  },
+  "events": [
+    {
+      "time_offset_seconds": 100,
+      "type": "network_partition",
+      "affected_regions": ["Asia_Pacific"],
+      "duration_seconds": 30
+    },
+    {
+      "time_offset_seconds": 200,
+      "type": "hashrate_spike",
+      "multiplier": 3.0,
+      "duration_seconds": 60
+    }
+  ]
+}

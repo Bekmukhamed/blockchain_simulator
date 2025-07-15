@@ -1,0 +1,38 @@
+{
+  "description": "Network topology configurations for different scenarios",
+  "global_distributed": {
+    "name": "Global Distributed Network",
+    "description": "Realistic global distribution of nodes",
+    "node_distribution": {
+      "North_America_East": 0.25,
+      "North_America_West": 0.15,
+      "Europe": 0.30,
+      "Asia_Pacific": 0.25,
+      "South_America": 0.05
+    },
+    "connection_strategy": "preferential_attachment",
+    "min_connections": 4,
+    "max_connections": 16,
+    "clustering_coefficient": 0.3
+  },
+  "datacenter_cluster": {
+    "name": "Datacenter Cluster",
+    "description": "Nodes in same datacenter with low latency",
+    "node_distribution": {
+      "datacenter": 1.0
+    },
+    "connection_strategy": "mesh",
+    "min_connections": 8,
+    "max_connections": 20,
+    "clustering_coefficient": 0.8
+  },
+  "small_world": {
+    "name": "Small World Network",
+    "description": "High clustering with short path lengths",
+    "connection_strategy": "watts_strogatz",
+    "rewiring_probability": 0.3,
+    "min_connections": 6,
+    "max_connections": 12,
+    "clustering_coefficient": 0.6
+  }
+}

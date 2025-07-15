@@ -1,0 +1,50 @@
+{
+  "description": "Network simulation parameters - blockchain agnostic",
+  "latency_profiles": {
+    "local": {
+      "name": "Local Network",
+      "description": "Same datacenter/LAN",
+      "min_ms": 1,
+      "max_ms": 5,
+      "average_ms": 2,
+      "jitter_ms": 0.5
+    },
+    "regional": {
+      "name": "Regional Network",
+      "description": "Same country/region",
+      "min_ms": 10,
+      "max_ms": 50,
+      "average_ms": 25,
+      "jitter_ms": 5
+    },
+    "global": {
+      "name": "Global Network",
+      "description": "Intercontinental internet",
+      "min_ms": 50,
+      "max_ms": 300,
+      "average_ms": 150,
+      "jitter_ms": 20
+    },
+    "poor": {
+      "name": "Poor Network",
+      "description": "High latency/unstable connection",
+      "min_ms": 200,
+      "max_ms": 1000,
+      "average_ms": 500,
+      "jitter_ms": 100
+    }
+  },
+  "bandwidth_profiles": {
+    "fiber": 1000,
+    "broadband": 100,
+    "dsl": 25,
+    "mobile": 10,
+    "satellite": 5
+  },
+  "packet_loss_profiles": {
+    "excellent": 0.0001,
+    "good": 0.001,
+    "average": 0.01,
+    "poor": 0.1
+  }
+}

@@ -57,3 +57,59 @@ class Config:
     
     # def init_parameters():
 
+BLOCKCHAIN_CONFIGS = {
+    'BTC': {
+        'reward': 50,
+        'halving': 210000,
+        'blocktime': 600,
+        'blocksize': 1000000,  # 1 MB
+        'max_tx': 4000
+    },
+    'BCH': {
+        'reward': 12.5,
+        'halving': 210000,
+        'blocktime': 600,
+        'blocksize': 32000000,  # 32 MB
+        'max_tx': 128000
+    },
+    'LTC': {
+        'reward': 50,
+        'halving': 840000,
+        'blocktime': 150,
+        'blocksize': 1000000,  # 1 MB
+        'max_tx': 4000
+    },
+    'DOGE': {
+        'reward': 10000,
+        'halving': None,  # No halving
+        'blocktime': 60,
+        'blocksize': 1000000,  # 1 MB
+        'max_tx': 4000
+    },
+    'MEMO': {
+        'reward': 51.8457072,
+        'halving': 9644000,
+        'blocktime': 3.27,
+        'blocksize': 8000000,  # 8 MB
+        'max_tx': 32000
+    }
+}
+
+WORKLOAD_CONFIGS = {
+    'SMALL': {
+        'wallets': 10,
+        'transactions': 10,
+        'interval': 10.0
+    },
+    'MEDIUM': {
+        'wallets': 1000,
+        'transactions': 1000,
+        'interval': 1.0
+    },
+    'LARGE': {
+        'wallets': 1000,
+        'transactions': 1000,
+        'interval': 0.01
+    }
+}
+

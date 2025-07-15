@@ -1,0 +1,29 @@
+
+{
+  "name": "Bitcoin Cash",
+  "symbol": "BCH",
+  "consensus": {
+    "algorithm": "proof_of_work",
+    "difficulty_adjustment_blocks": 2016,
+    "difficulty_adjustment_time": 1209600
+  },
+  "mining": {
+    "initial_reward": 12.5,
+    "halving_interval": 210000,
+    "target_block_time": 600,
+    "max_halvings": 33
+  },
+  "blocks": {
+    "max_size_bytes": 32000000,
+    "max_transactions": 128000,
+    "header_size_bytes": 1024,
+    "transaction_size_bytes": 256
+  },
+  "network": {
+    "default_nodes": 100,
+    "default_connections": 8
+  },
+  "economics": {
+    "max_supply": 21000000
+  }
+}
