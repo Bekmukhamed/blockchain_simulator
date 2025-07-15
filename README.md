@@ -17,5 +17,5 @@ Blockchain selection:<br>
 --halving BLOCKS     Halving interval (blocks)<br> 
 ```
 Simple simulation with default values<br> 
-```python sim-blockchain.py<br>```
+```python sim-blockchain.py```
 
