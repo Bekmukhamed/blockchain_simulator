@@ -11,10 +11,16 @@ class Header:
     transaction_count: int
     size: int = 1024
 
+    merkle_root: str = ""
+    difficulty_target: int = 0
+    nonce: int = 0
+
+
     def update_size(self, transactions_count, tx_size_bytes=256):
         """Update size based on header + transaction sizes"""
         self.size = 1024 + (transactions_count * tx_size_bytes)
         self.transaction_count = transactions_count
+
 
 @dataclass
 class Block: 

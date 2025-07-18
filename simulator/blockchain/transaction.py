@@ -3,12 +3,20 @@ from uuid import uuid4
     
 @dataclass
 class Transaction:
-    transaction_id: int
+    transaction_id: str
     sender: str
     receiver: str
     amount: float
     timestamp: int
-    fee: int
+    fee: float
+    
+    priority: float =0.0
+
+
+    def __post_init__(self):
+        tx_size = 256
+        self.priority = self.fee / tx_size
+
 
     @staticmethod
     def create_transaction(sender, receiver, amount, timestamp, fee):

@@ -1,3 +1,4 @@
 blockchain-simulator-env/*
 blockchain-simulator-env/
 blockchain/__pycache__/
+config/__pycache__/

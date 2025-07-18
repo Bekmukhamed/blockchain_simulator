@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from blockchain.block import Block, Header
-from blockchain.transaction_pool import Transaction_pool
+from blockchain.core.block import Block, Header
+from blockchain.core.transaction_pool import Transaction_pool
 
 @dataclass
 class Miner:
@@ -8,7 +8,7 @@ class Miner:
     hashrate: int
     blocktime: int
     difficulty: int
-    reward: int
+    reward: float  # Changed to float for proper reward calculations
 
     def mine_block(self, parent_block_id, pool, block_id, timestamp, blocksize, wallets_dict):
         transactions = pool.transactions_limit(blocksize)
@@ -19,9 +19,10 @@ class Miner:
         
         # Process transactions - update wallet balances
         for tx in transactions:
-            sender_wallet = wallets_dict[tx.sender]
-            receiver_wallet = wallets_dict[tx.receiver]
-            receiver_wallet.receive_payment(tx.amount)
+            if tx.sender in wallets_dict and tx.receiver in wallets_dict:
+                sender_wallet = wallets_dict[tx.sender]
+                receiver_wallet = wallets_dict[tx.receiver]
+                receiver_wallet.receive_payment(tx.amount)
         
         # Miner gets block reward + fees
         miner_wallet = wallets_dict.get(f"miner_{self.miner_id}")
