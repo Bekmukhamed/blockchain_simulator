@@ -11,6 +11,7 @@ Blockchain network simulation framework built in Python using SimPy for discrete
 - [ ] Use chains difficulty, hashrate, block reward
 - [ ] Different market (rise, fall of prices)
 - [ ] Limited mempoool
+- [ ] Sharding
 - [ ] 
 
 ## Installation
