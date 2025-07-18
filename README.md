@@ -2,6 +2,17 @@
 
 Blockchain network simulation framework built in Python using SimPy for discrete event simulation. Supports multiple blockchain protocols—including Bitcoin (btc), Bitcoin Cash (bch), Litecoin (ltc), Dogecoin (doge), and Memo
 
+## TODO
+- [ ] Mining economics (mining pools)
+- [ ] Dynamic fee to adjust for network congestion
+- [ ] Geographic ping for nodes connection
+- [ ] Different users behaviour
+- [ ] Difficulty adjustment
+- [ ] Use chains difficulty, hashrate, block reward
+- [ ] Different market (rise, fall of prices)
+- [ ] Limited mempoool
+- [ ] 
+
 ## Installation
 ```bash
 git clone https://github.com/Bekmukhamed/blockchain_simulator.git
