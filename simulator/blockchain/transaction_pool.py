@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import List, Set
-from blockchain.core.transaction import Transaction
+from simulator.blockchain.transaction import Transaction
 
 @dataclass
 class Transaction_pool:

@@ -25,7 +25,7 @@ class Wallet:
         if self.balance < (amount + fee):
             raise ValueError(f"Insufficient balance: {self.balance} < {amount + fee}")
 
-        from blockchain.core.transaction import Transaction
+        from simulator.blockchain.transaction import Transaction
         transaction = Transaction(
             transaction_id=transaction_id,
             sender=self.wallet_id,

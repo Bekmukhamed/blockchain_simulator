@@ -29,6 +29,8 @@ class NetworkSimulator:
     
     def propagate_block(self, block, start_node_id, nodes, metrics):
         """Simulate realistic block propagation"""
+        # Calculate delays for all nodes
+        total_delay = 0
         for node_id in range(len(nodes)):
             if node_id != start_node_id:
                 # Calculate network latency
@@ -38,14 +40,14 @@ class NetworkSimulator:
                 bandwidth_delay = self.get_bandwidth_delay(block.header.size)
                 
                 # Total propagation delay in seconds
-                total_delay = (latency + bandwidth_delay) / 1000
+                delay = (latency + bandwidth_delay) / 1000
+                total_delay = max(total_delay, delay)  # Use max delay
                 
                 # Update metrics
                 metrics.io_requests += 1
                 metrics.network_data += block.header.size / (1024 * 1024)  # MB
                 
-                return total_delay
-        return 0
+        return total_delay
     
     def get_network_latency(self, from_node: int, to_node: int) -> float:
         """Calculate network latency between nodes in milliseconds"""

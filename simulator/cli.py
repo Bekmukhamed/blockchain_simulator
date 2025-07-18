@@ -1,7 +1,7 @@
 import sys
 import os
 import json
-from blockchain import config
+from simulator import config
 from config.config_loader import ConfigLoader
 
 class JSONBasedCLI:
@@ -216,12 +216,14 @@ class JSONBasedCLI:
             except FileNotFoundError as e:
                 print(f"Warning: {e}")
         
-        # Handle years parameter
+        # Handle years parameter - fix the calculation
         if 'years' in args:
             years = float(args['years'])
-            # Use the configured block time, not the default
-            blocks_per_day = int(86400 / config_kwargs['blocktime'])
-            config_kwargs['blocks'] = int(blocks_per_day * 365 * years)
+            # Use seconds per year / block time to get blocks per year
+            seconds_per_year = 365.25 * 24 * 60 * 60  # 31,557,600 seconds
+            blocks_per_year = int(seconds_per_year / config_kwargs['blocktime'])
+            config_kwargs['blocks'] = int(blocks_per_year * years)
+            print(f"Simulating {years} years = {config_kwargs['blocks']} blocks at {config_kwargs['blocktime']}s per block")
         
         # Initialize difficulty if not provided
         if 'difficulty' not in args or args['difficulty'] == '0':

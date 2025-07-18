@@ -2,41 +2,15 @@ import simpy
 import time
 import random
 from typing import List
-from dataclasses import dataclass, field
 
+from simulator.core.metrics import SimulationMetrics  # Keep this import
 from simulator.blockchain.nodes import Node
 from simulator.blockchain.miner import Miner
 from simulator.blockchain.wallet import Wallet
 from simulator.blockchain.block import Block
 from simulator.blockchain.transaction_pool import Transaction_pool
 from simulator.network.topology import Network_topology
-
-@dataclass
-class SimulationMetrics:
-    total_transactions: int = 0
-    confirmed_transactions: int = 0
-    coin_supply: float = 0
-    network_data: float = 0  # in MB
-    io_requests: int = 0
-    block_times: List[float] = field(default_factory=list)
-    difficulty_adjustments: int = 0
-    halving_count: int = 0
-    pending_transactions: int = 0
-    
-    def get_average_block_time(self):
-        return sum(self.block_times) / len(self.block_times) if self.block_times else 0
-    
-    def get_tps(self, current_time):
-        return self.confirmed_transactions / current_time if current_time > 0 else 0
-    
-    def get_inflation_rate(self):
-        if len(self.block_times) <= 1:
-            return 0.0
-        # Calculate inflation based on recent coin issuance
-        if len(self.block_times) >= 2016:
-            recent_supply_change = self.coin_supply - (self.coin_supply * 0.95)  # Simplified
-            return (recent_supply_change / self.coin_supply) * 100 if self.coin_supply > 0 else 0.0
-        return 0.0
+from simulator.network.network_simulator import NetworkSimulator
 
 class BlockchainSimulation:
     def __init__(self, config):
@@ -56,24 +30,43 @@ class BlockchainSimulation:
         self.current_reward = config.reward
         self.last_block_time = 0
         
-        # Network topology
+        # Network components
         self.topology = Network_topology()
+        self.network_simulator = NetworkSimulator(config)  # Added this
         
     def run(self):
-        # Initialize components
-        self._setup_network()
-        self._setup_miners()
-        self._setup_wallets()
+        start_time = time.time()
         
-        # Start processes
-        self._start_mining_processes()
-        self._start_wallet_processes()
+        print(f"Starting simulation with {self.config.blocks} target blocks")
+        print(f"Miners: {self.config.miners}, Hashrate: {self.config.hashrate}")
+        print(f"Wallets: {self.config.wallets}, Transactions: {self.config.transactions}")
+        print(f"Difficulty: {self.current_difficulty}")
         
-        # Run simulation
-        self.env.run()
-        
-        # Print final results
-        self._print_final_summary()
+        try:
+            # Initialize components
+            self._setup_network()
+            self._setup_miners()
+            self._setup_wallets()
+            
+            print(f"Setup complete. Starting processes...")
+            
+            # Start processes
+            self._start_mining_processes()
+            self._start_wallet_processes()
+            
+            print(f"Processes started. Running simulation...")
+            
+            # Run simulation - use SimPy's run method properly
+            self.env.run()
+            
+        except Exception as e:
+            print(f"Simulation failed: {e}")
+            import traceback
+            traceback.print_exc()
+            raise
+        finally:
+            # Print final results
+            self._print_final_summary(start_time)
     
     def _setup_network(self):
         self.topology.create_network(self.nodes, self.config.nodes, self.config.neighbors)
@@ -106,6 +99,8 @@ class BlockchainSimulation:
         block_id = len(self.blocks) + 1
         blocks_since_retarget = 0
         
+        print(f"Miner {miner.miner_id} starting mining process")
+        
         while len(self.blocks) < self.config.blocks:
             # Calculate mining time using exponential distribution
             # Expected time per block ∼ Exp(total_hashrate / difficulty)
@@ -113,8 +108,14 @@ class BlockchainSimulation:
             rate = total_hashrate / self.current_difficulty
             mining_time = random.expovariate(rate)
             
+            print(f"Miner {miner.miner_id} waiting {mining_time:.2f}s to mine block {block_id}")
+            
             # Wait for mining time
             yield self.env.timeout(mining_time)
+            
+            # Only one miner should mine each block - use a simple check
+            if len(self.blocks) >= self.config.blocks:
+                break
             
             # Mine the block
             current_time = self.env.now
@@ -145,7 +146,9 @@ class BlockchainSimulation:
             self.metrics.confirmed_transactions += len(included_tx_ids)
             self.metrics.pending_transactions -= len(included_tx_ids)
             
-            # Block propagation
+            print(f"Block {block_id} mined by miner {miner.miner_id} at time {current_time:.2f}")
+            
+            # Block propagation using network simulator
             yield from self._propagate_block(block, miner.miner_id)
             
             # Remove confirmed transactions from pool
@@ -202,20 +205,19 @@ class BlockchainSimulation:
         if len(self.nodes) > 0:
             start_node = miner_id % len(self.nodes)
             
-            # Propagate to all nodes
+            # Use network simulator for realistic propagation
             for node in self.nodes:
                 if node.node_id != start_node:
-                    # Simulate network delay based on block size
-                    base_delay = random.uniform(0.1, 1.0)  # 100ms to 1s
-                    size_delay = block.header.size / (10 * 1024 * 1024)  # 10 MB/s bandwidth
-                    total_delay = base_delay + size_delay
+                    # Get propagation delay from network simulator
+                    delay = self.network_simulator.propagate_block(
+                        block, miner_id, self.nodes, self.metrics
+                    )
                     
-                    yield self.env.timeout(total_delay)
+                    if delay > 0:
+                        yield self.env.timeout(delay)
                     
                     # Node receives block
-                    if node.receive_block(block, self.nodes):
-                        self.metrics.io_requests += 1
-                        self.metrics.network_data += block.header.size / (1024 * 1024)  # Convert to MB
+                    node.receive_block(block, self.nodes)
     
     def _adjust_difficulty(self):
         if len(self.metrics.block_times) >= 2016:
@@ -251,10 +253,11 @@ class BlockchainSimulation:
               f"Pool:{self.metrics.pending_transactions} "
               f"NMB:{self.metrics.network_data:.2f} IO:{self.metrics.io_requests}")
     
-    def _print_final_summary(self):
+    def _print_final_summary(self, start_time):
         current_time = self.env.now
         avg_block_time = self.metrics.get_average_block_time()
         tps = self.metrics.get_tps(current_time)
+        simulation_time = time.time() - start_time
         
         print(f"[******] End B:{len(self.blocks)}/{self.config.blocks} 100.0% "
               f"abt:{avg_block_time:.2f}s tps:{tps:.2f} infl:0.00% "
@@ -263,3 +266,8 @@ class BlockchainSimulation:
               f"Tx:{self.metrics.total_transactions} C:{self.metrics.coin_supply:.0f} "
               f"Pool:{self.metrics.pending_transactions} "
               f"NMB:{self.metrics.network_data:.2f} IO:{self.metrics.io_requests}")
+        
+        print(f"\nSimulation completed in {simulation_time:.2f} seconds")
+        print(f"Total blocks mined: {len(self.blocks)}")
+        print(f"Total transactions: {self.metrics.total_transactions}")
+        print(f"Total coins created: {self.metrics.coin_supply:.2f}")

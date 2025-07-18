@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from blockchain.core.block import Block, Header
-from blockchain.core.transaction_pool import Transaction_pool
+from simulator.blockchain.block import Block, Header  # Fixed import
+from simulator.blockchain.transaction_pool import Transaction_pool  # Fixed import
 
 @dataclass
 class Miner:
