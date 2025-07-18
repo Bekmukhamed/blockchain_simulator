@@ -37,10 +37,10 @@ class BlockchainSimulation:
     def run(self):
         start_time = time.time()
         
-        print(f"Starting simulation with {self.config.blocks} target blocks")
-        print(f"Miners: {self.config.miners}, Hashrate: {self.config.hashrate}")
-        print(f"Wallets: {self.config.wallets}, Transactions: {self.config.transactions}")
-        print(f"Difficulty: {self.current_difficulty}")
+        # print(f"Starting simulation with {self.config.blocks} target blocks")
+        # print(f"Miners: {self.config.miners}, Hashrate: {self.config.hashrate}")
+        # print(f"Wallets: {self.config.wallets}, Transactions: {self.config.transactions}")
+        # print(f"Difficulty: {self.current_difficulty}")
         
         try:
             # Initialize components
@@ -48,13 +48,13 @@ class BlockchainSimulation:
             self._setup_miners()
             self._setup_wallets()
             
-            print(f"Setup complete. Starting processes...")
+            # print(f"Setup complete. Starting processes...")
             
             # Start processes
             self._start_mining_processes()
             self._start_wallet_processes()
             
-            print(f"Processes started. Running simulation...")
+            # print(f"Processes started. Running simulation...")
             
             # Run simulation - use SimPy's run method properly
             self.env.run()
@@ -99,7 +99,7 @@ class BlockchainSimulation:
         block_id = len(self.blocks) + 1
         blocks_since_retarget = 0
         
-        print(f"Miner {miner.miner_id} starting mining process")
+        # print(f"Miner {miner.miner_id} starting mining process")
         
         while len(self.blocks) < self.config.blocks:
             # Calculate mining time using exponential distribution
@@ -108,7 +108,7 @@ class BlockchainSimulation:
             rate = total_hashrate / self.current_difficulty
             mining_time = random.expovariate(rate)
             
-            print(f"Miner {miner.miner_id} waiting {mining_time:.2f}s to mine block {block_id}")
+            # print(f"Miner {miner.miner_id} waiting {mining_time:.2f}s to mine block {block_id}")
             
             # Wait for mining time
             yield self.env.timeout(mining_time)
@@ -146,7 +146,7 @@ class BlockchainSimulation:
             self.metrics.confirmed_transactions += len(included_tx_ids)
             self.metrics.pending_transactions -= len(included_tx_ids)
             
-            print(f"Block {block_id} mined by miner {miner.miner_id} at time {current_time:.2f}")
+           # print(f"Block {block_id} mined by miner {miner.miner_id} at time {current_time:.2f}")
             
             # Block propagation using network simulator
             yield from self._propagate_block(block, miner.miner_id)

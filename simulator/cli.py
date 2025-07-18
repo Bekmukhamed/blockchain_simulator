@@ -223,7 +223,7 @@ class JSONBasedCLI:
             seconds_per_year = 365.25 * 24 * 60 * 60  # 31,557,600 seconds
             blocks_per_year = int(seconds_per_year / config_kwargs['blocktime'])
             config_kwargs['blocks'] = int(blocks_per_year * years)
-            print(f"Simulating {years} years = {config_kwargs['blocks']} blocks at {config_kwargs['blocktime']}s per block")
+            # print(f"Simulating {years} years = {config_kwargs['blocks']} blocks at {config_kwargs['blocktime']}s per block")
         
         # Initialize difficulty if not provided
         if 'difficulty' not in args or args['difficulty'] == '0':
